@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include uniklia *.css
+recursive-include uniklia *.csv
+recursive-include uniklia *.html
+recursive-include uniklia *.ico
+recursive-include uniklia *.js
+recursive-include uniklia *.json
+recursive-include uniklia *.md
+recursive-include uniklia *.png
+recursive-include uniklia *.py
+recursive-include uniklia *.svg
+recursive-include uniklia *.txt
+recursive-exclude uniklia *.pyc
