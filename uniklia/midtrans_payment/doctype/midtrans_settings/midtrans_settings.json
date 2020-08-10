@@ -1,0 +1,88 @@
+{
+ "actions": [],
+ "autoname": "Midtrans-.#",
+ "creation": "2020-08-10 22:10:44.877936",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "merchant_id",
+  "client_key",
+  "server_key",
+  "section_break_4",
+  "use_sandbox",
+  "sandbox_client_key",
+  "sandbox_server_key"
+ ],
+ "fields": [
+  {
+   "fieldname": "merchant_id",
+   "fieldtype": "Data",
+   "label": "Merchant ID"
+  },
+  {
+   "fieldname": "client_key",
+   "fieldtype": "Data",
+   "label": "Client Key"
+  },
+  {
+   "fieldname": "server_key",
+   "fieldtype": "Data",
+   "label": "Server Key"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "use_sandbox",
+   "fieldtype": "Check",
+   "label": "Use Sandbox"
+  },
+  {
+   "fieldname": "sandbox_client_key",
+   "fieldtype": "Data",
+   "label": "Sandbox Client Key"
+  },
+  {
+   "fieldname": "sandbox_server_key",
+   "fieldtype": "Data",
+   "label": "Sandbox Server Key"
+  }
+ ],
+ "in_create": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2020-08-10 22:13:02.291351",
+ "modified_by": "Administrator",
+ "module": "Midtrans Payment",
+ "name": "Midtrans Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Administrator",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "read_only": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
