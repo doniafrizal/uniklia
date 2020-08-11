@@ -8,6 +8,7 @@ import frappe
 import json
 import pytz
 import midtransclient
+import base64
 from frappe import _
 from six.moves.urllib.parse import urlencode
 from frappe.model.document import Document
@@ -31,7 +32,7 @@ class MidtransSettings(Document):
 		create_payment_gateway("Midtrans")
 		call_hook_method('payment_gateway_enabled', gateway="Midtrans")
 		if not self.flags.ignore_mandatory:
-			self.validate_paypal_credentails()
+			self.validate_midtrans_credentails()
 
 	def on_update(self):
 		pass
@@ -42,7 +43,7 @@ class MidtransSettings(Document):
 				"Please select another payment method. Midtrans does not support transactions in currency '{0}'").format(
 				currency))
 
-	def get_paypal_params_and_url(self):
+	def get_midtrans_params_and_url(self):
 		params = {
 			"client_key": self.client_key,
 			"server_key": self.server_key
@@ -54,20 +55,27 @@ class MidtransSettings(Document):
 				"server_key": frappe.conf.sandbox_server_key
 			})
 
-		api_url = "https://api-3t.sandbox.paypal.com/nvp" if (
-					self.paypal_sandbox or self.use_sandbox) else "https://api-3t.paypal.com/nvp"
+		api_url = "https://app.sandbox.midtrans.com/snap/v1" if self.use_sandbox else "https://app.midtrans.com/snap/v1"
 
 		return params, api_url
 
-	def validate_paypal_credentails(self):
-		params, url = self.get_paypal_params_and_url()
-		params = urlencode(params)
+	def validate_midtrans_credentails(self):
+		params, url = self.get_midtrans_params_and_url()
+		params = params['server_key'] + ":"
 
+		encodedbytes = base64.b64encode(params.encode("utf-8"))
+		encodedstr = "Basic " + str(encodedbytes, "utf-8")
+
+		midtrans_headers = {
+			'content-type': 'application/json',
+			'accept': 'application/json',
+			'user-agent': 'midtransclient-python/1.0.2'
+		}
 		try:
-			res = make_post_request(url=url, data=params.encode("utf-8"))
+			res = make_post_request(url=url, auth=encodedstr, headers=midtrans_headers)
 
-			if res["ACK"][0] == "Failure":
+			if res['status_code'] >= 300:
 				raise Exception
 
 		except Exception:
-			frappe.throw(_("Invalid payment gateway credentials"))
+			frappe.throw(_("Invalid payment gateway credentials "))
