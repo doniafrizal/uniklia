@@ -56,18 +56,9 @@ class MidtransPaySettings(Document):
 
 		response = self.execute_set_express_checkout(**kwargs)
 
-		if self.use_sandbox:
-			return_url = "https://app.sandbox.midtrans.com/snap/v2/vtweb/{0}"
-		else:
-			return_url = "https://app.midtrans.com/snap/v2/vtweb/{0}"
+		self.integration_request = create_request_log(kwargs, "Host", "MidtransPay")
 
-		kwargs.update({
-			"token": response.get("token"),
-			"redirect_url": response.get("redirect_url")
-		})
-		self.integration_request = create_request_log(kwargs, "Remote", "Midtrans", response.get("token"))
-
-		return return_url.format(kwargs["token"])
+		return response.get('redirect_url')
 
 	def execute_set_express_checkout(self, **kwargs):
 		params, url = self.get_midtrans_params_and_url()
@@ -86,10 +77,8 @@ class MidtransPaySettings(Document):
 
 		response = snap.create_transaction(order_details)
 
-		if response.get("status_code") != 200:
-			frappe.throw(_("Looks like something is wrong with this site's Midtrans configuration."))
-
 		return response
+
 
 def get_gateway_controller(doctype, docname):
 	reference_doc = frappe.get_doc(doctype, docname)
