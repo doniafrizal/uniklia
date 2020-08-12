@@ -17,14 +17,14 @@ from frappe.integrations.utils import create_request_log, make_post_request, cre
 from frappe.utils import get_url, call_hook_method, cint, get_datetime
 
 
-api_path = '/api/method/uniklia.midtrans_payment.doctype.midtrans_settings.midtrans_settings'
+api_path = '/api/method/uniklia.midtrans_payment.doctype.midtranspay_settings.midtranspay_settings'
 
-class MidtransSettings(Document):
+class MidtransPaySettings(Document):
 	supported_currencies = "IDR"
 
 	def validate(self):
-		create_payment_gateway('Midtrans')
-		call_hook_method('payment_gateway_enabled', gateway='Midtrans')
+		create_payment_gateway('MidtransPay')
+		call_hook_method('payment_gateway_enabled', gateway='MidtransPay')
 
 	def on_update(self):
 		pass
@@ -73,7 +73,7 @@ class MidtransSettings(Document):
 		params, url = self.get_midtrans_params_and_url()
 
 		snap = midtransclient.Snap(
-			is_production=self.use_sanbox,
+			is_production=self.use_sandbox,
 			server_key=params['server_key']
 		)
 
@@ -90,3 +90,9 @@ class MidtransSettings(Document):
 			frappe.throw(_("Looks like something is wrong with this site's Midtrans configuration."))
 
 		return response
+
+def get_gateway_controller(doctype, docname):
+	reference_doc = frappe.get_doc(doctype, docname)
+	gateway_controller = frappe.db.get_value("Payment Gateway", reference_doc.payment_gateway, "gateway_controller")
+	return gateway_controller
+

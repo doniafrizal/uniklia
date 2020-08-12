@@ -57,7 +57,7 @@
  "modified": "2020-08-10 22:13:02.291351",
  "modified_by": "Administrator",
  "module": "Midtrans Payment",
- "name": "Midtrans Settings",
+ "name": "MidtransPay Settings",
  "owner": "Administrator",
  "permissions": [
   {
