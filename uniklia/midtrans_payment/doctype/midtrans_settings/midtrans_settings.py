@@ -9,6 +9,7 @@ import json
 import pytz
 import midtransclient
 import base64
+import requests
 from frappe import _
 from six.moves.urllib.parse import urlencode
 from frappe.model.document import Document
@@ -49,3 +50,43 @@ class MidtransSettings(Document):
 		api_url = "https://app.sandbox.midtrans.com/snap/v1" if self.use_sandbox else "https://app.midtrans.com/snap/v1"
 
 		return params, api_url
+
+	def get_payment_url(self, **kwargs):
+		setattr(self, "use_sandbox", cint(kwargs.get("use_sandbox", 0)))
+
+		response = self.execute_set_express_checkout(**kwargs)
+
+		if self.use_sandbox:
+			return_url = "https://app.sandbox.midtrans.com/snap/v2/vtweb/{0}"
+		else:
+			return_url = "https://app.midtrans.com/snap/v2/vtweb/{0}"
+
+		kwargs.update({
+			"token": response.get("token"),
+			"redirect_url": response.get("redirect_url")
+		})
+		self.integration_request = create_request_log(kwargs, "Remote", "Midtrans", response.get("token"))
+
+		return return_url.format(kwargs["token"])
+
+	def execute_set_express_checkout(self, **kwargs):
+		params, url = self.get_midtrans_params_and_url()
+
+		snap = midtransclient.Snap(
+			is_production=self.use_sanbox,
+			server_key=params['server_key']
+		)
+
+		order_details = {
+			"transaction_details": {
+				"order_id": kwargs['order_id'],
+				"gross_amount": kwargs['amount']
+			}
+		}
+
+		response = snap.create_transaction(order_details)
+
+		if response.get("status_code") != 200:
+			frappe.throw(_("Looks like something is wrong with this site's Midtrans configuration."))
+
+		return response
