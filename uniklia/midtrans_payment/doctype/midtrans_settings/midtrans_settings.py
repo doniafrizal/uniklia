@@ -21,18 +21,9 @@ api_path = '/api/method/uniklia.midtrans_payment.doctype.midtrans_settings.midtr
 class MidtransSettings(Document):
 	supported_currencies = "IDR"
 
-	def __setup__(self):
-		setattr(self, "use_sandbox", 0)
-
-	def setup_sandbox_env(self, token):
-		data = json.loads(frappe.db.get_value("Integration Request", token, "data"))
-		setattr(self, "use_sandbox", cint(frappe._dict(data).use_sandbox) or 0)
-
 	def validate(self):
-		create_payment_gateway("Midtrans")
-		call_hook_method('payment_gateway_enabled', gateway="Midtrans")
-		if not self.flags.ignore_mandatory:
-			self.validate_midtrans_credentails()
+		create_payment_gateway('Midtrans')
+		call_hook_method('payment_gateway_enabled', gateway='Midtrans')
 
 	def on_update(self):
 		pass
@@ -58,37 +49,3 @@ class MidtransSettings(Document):
 		api_url = "https://app.sandbox.midtrans.com/snap/v1" if self.use_sandbox else "https://app.midtrans.com/snap/v1"
 
 		return params, api_url
-
-	def validate_midtrans_credentails(self):
-		params, url = self.get_midtrans_params_and_url()
-		url = url + "/transactions"
-
-		midtrans_headers = {
-			'content-type': 'application/json',
-			'accept': 'application/json',
-			'user-agent': 'midtransclient-python/1.0.2'
-		}
-
-		data = {
-			"transaction_details": {
-				"order_id": "YOUR-ORDERID-123456",
-				"gross_amount": 10000
-			},
-			"credit_card": {
-				"secure": True
-			},
-			"customer_details": {
-				"first_name": "budi",
-				"last_name": "pratama",
-				"email": "budi.pra@example.com",
-				"phone": "08111222333"
-			}
-		}
-		try:
-			res = make_post_request(url=url, auth=(params['server_key'], ""), headers=midtrans_headers, data=json.dumps(data))
-
-			if res['status_code'] >= 300:
-				raise Exception
-
-		except Exception:
-			frappe.throw(_("Invalid payment gateway credentials "))
