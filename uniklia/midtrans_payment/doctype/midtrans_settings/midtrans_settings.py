@@ -61,18 +61,31 @@ class MidtransSettings(Document):
 
 	def validate_midtrans_credentails(self):
 		params, url = self.get_midtrans_params_and_url()
-		params = params['server_key'] + ":"
-
-		encodedbytes = base64.b64encode(params.encode("utf-8"))
-		encodedstr = "Basic " + str(encodedbytes, "utf-8")
+		url = url + "/transactions"
 
 		midtrans_headers = {
 			'content-type': 'application/json',
 			'accept': 'application/json',
 			'user-agent': 'midtransclient-python/1.0.2'
 		}
+
+		data = {
+			"transaction_details": {
+				"order_id": "YOUR-ORDERID-123456",
+				"gross_amount": 10000
+			},
+			"credit_card": {
+				"secure": True
+			},
+			"customer_details": {
+				"first_name": "budi",
+				"last_name": "pratama",
+				"email": "budi.pra@example.com",
+				"phone": "08111222333"
+			}
+		}
 		try:
-			res = make_post_request(url=url, auth=encodedstr, headers=midtrans_headers)
+			res = make_post_request(url=url, auth=(params['server_key'], ""), headers=midtrans_headers, data=json.dumps(data))
 
 			if res['status_code'] >= 300:
 				raise Exception
