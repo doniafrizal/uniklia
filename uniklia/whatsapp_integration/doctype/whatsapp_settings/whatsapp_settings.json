@@ -1,0 +1,90 @@
+{
+ "actions": [],
+ "autoname": "whatsapp-integration-.##",
+ "creation": "2020-08-14 21:04:04.963441",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "channel_id",
+  "sandbox_phone_number",
+  "your_whatsapp_number",
+  "live_key",
+  "section_break_5",
+  "use_test_key",
+  "test_key"
+ ],
+ "fields": [
+  {
+   "fieldname": "channel_id",
+   "fieldtype": "Data",
+   "label": "Channel ID"
+  },
+  {
+   "fieldname": "sandbox_phone_number",
+   "fieldtype": "Data",
+   "label": "Sandbox Phone Number"
+  },
+  {
+   "fieldname": "your_whatsapp_number",
+   "fieldtype": "Data",
+   "label": "Your Whatsapp Number"
+  },
+  {
+   "fieldname": "live_key",
+   "fieldtype": "Data",
+   "label": "Live Key"
+  },
+  {
+   "fieldname": "test_key",
+   "fieldtype": "Data",
+   "label": "Test Key"
+  },
+  {
+   "fieldname": "section_break_5",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "use_test_key",
+   "fieldtype": "Check",
+   "label": "Use Test Key"
+  }
+ ],
+ "links": [],
+ "modified": "2020-08-14 21:33:08.002357",
+ "modified_by": "Administrator",
+ "module": "Whatsapp Integration",
+ "name": "Whatsapp Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Administrator",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

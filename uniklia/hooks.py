@@ -11,6 +11,12 @@ app_color = "grey"
 app_email = "unikliadotcom@gmail.com"
 app_license = "MIT"
 
+doctype_js = {
+    "SMS Center": "public/js/sms_center.js"
+}
+
+app_include_js = "/assets/whatsapp_integration/js/moneky_whatsapp.js"
+
 # Includes in <head>
 # ------------------
 

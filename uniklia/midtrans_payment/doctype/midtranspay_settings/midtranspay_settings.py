@@ -64,7 +64,7 @@ class MidtransPaySettings(Document):
 		params, url = self.get_midtrans_params_and_url()
 
 		snap = midtransclient.Snap(
-			is_production=self.use_sandbox,
+			is_production=False,
 			server_key=params['server_key']
 		)
 
